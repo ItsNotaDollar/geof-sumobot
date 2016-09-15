@@ -9,7 +9,7 @@ Team members:
 - **Braden** - [ItsNotaDollar](https://github.com/ItsNotaDollar)
 - **BoHan** - Nope...
 - **Jack** - Naaaa....
-- **Patrick** - Sorry...
+- **Patrick** - [pswitchskates](https://github.com/pswitchskates)
 
 To start working on the project just download/clone in which ever way tickles your fancy.
 
@@ -21,14 +21,19 @@ The **master arduino** will handle the direct inputs from sonar sensors in order
 ###Slave
 The **slave arduino** will handle the 4 QRD's as well as the pressure sensors. It takes these 6 analog inputs and outputs to 2 interrupt channels on the **master**. It also has 6 digital output pins to communicate values to the **master** \*cough cough\* and commander. Each is going to be an indicator for which sensors have tripped for the master. An interrupt will be sent to tell the **master** to read these inputs, otherwise they will be ignored.
 
-|Input Pin -> Output Pin|        Sensor         |
-|:---------------------:|:---------------------:|
-| A0 -> D0              | Front Left QRD        |
-| A1 -> D1              | Front Right QRD       |
-| A2 -> D2              | Back Left QRD         |
-| A3 -> D3              | Back Right QRD        |
-| A4 -> D4              | Front Pressure Sensor |
-| A5 -> D5              | Back Pressure Sensor  |
+| Input Pin -> Output Pin |        Sensor             |
+|:-----------------------:|:-------------------------:|
+| A0 -> D0                | Front Left QRD            |
+| A1 -> D1                | Front Right QRD           |
+| A2 -> D2                | Back Left QRD             |
+| A3 -> D3                | Back Right QRD            |
+| A4 -> D4                | Front Pressure Sensor     |
+| A5 -> D5                | Back Pressure Sensor      |
+|                         |                           |
+| RX                      | QRD Interrupt             |
+| TX                      | Pressure Sensor Interrupt |
 
-- RX - QRD Interrupt
-- TX - Pressure Sensor
+###Contributing
+If you would like to contribute download the git desktop software and check out this repo. Once you have checked out the master branch create a new branch. **PLEASE** follow the naming convention of `feature-[your username]` as your branch. This will allow me to track which user is creating which pull request to be merged into the master branch.
+
+When committing it is best practice to add commit messages so that debugging can be traced. When creating a pull request please add a description of the features you have added, especially if there are no commit messages...

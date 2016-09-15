@@ -21,14 +21,17 @@ void loop() {
 ```
 
 ###Pins in Use
-| Pin           | Function                  |
-|:-------------:|:-------------------------:|
-| in A0, out D0 | Front Left QRD            |
-| in A1, out D1 | Front Right QRD           |
-| in A2, out D2 | Back Left QRD             |
-| in A3, out D3 | Back Right QRD            |
-| in A4, out D4 | Front Pressure Sensor     |
-| in A5, out D5 | Back Pressure Sensor      |
-|               |                           |
-| RX?           | QRD Interrupt             |
-| TX?           | Pressure Sensor Interrupt |
+| Pin           | Function                     |
+|:-------------:|:----------------------------:|
+| in A0         | Left Sonar Sensor            |
+| in A1         | Right Sonar Sensor           |
+|               |                              |
+| in D0         | Front Left QRD bit           |
+| in D1         | Front Right QRD bit          |
+| in D2         | Back Left QRD bit            |
+| in D3         | Back Right QRD bit           |
+| in D4         | Front Pressure Sensor bit    |
+| in D5         | Back Pressure Sensor bit     |
+|               |                              |
+| RX            | QRD Interrupt                |
+| TX            | Pressure Sensor Interrupt    |
