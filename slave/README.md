@@ -21,5 +21,5 @@ void loop() {
 | in A4, out D4 | Front Pressure Sensor     |
 | in A5, out D5 | Back Pressure Sensor      |
 |               |                           |
-| RX?           | QRD Interrupt             |
-| TX?           | Pressure Sensor Interrupt |
+| out D6        | QRD Interrupt             |
+| out D7        | Pressure Sensor Interrupt |
