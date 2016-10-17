@@ -1,9 +1,9 @@
-#**McMaster Sumobot - Team Eh?**
+#**McMaster Sumobot - Team Eh**
 
 ###Overview
 Welcome to the location of all of **Team Eh?**'s code for the [McMaster Sumobot](http://sumobot.ca/) Competition!!! This is the spot to download and contribute to our amazing robots!
 
-Lets go Jeff/Geoff/JFff/Geoph/Jeph!!!
+Lets go Jeff/Geoff/JFff/Geoph/Jeph/Djeoph!!!
 
 Team members: 
 - **Braden** - [ItsNotaDollar](https://github.com/ItsNotaDollar)
@@ -15,13 +15,13 @@ To start working on the project just download/clone in which ever way tickles yo
 
 When you're ready to upload **Submit A Pull Request** and I will merge in changes ASAP. If it's just not good enough... you'll find out...
 
-###Master
+<!-- ###Master
 The **master arduino** will handle the direct inputs from sonar sensors in order to seek out other robots. It also directly controls the motors. 
 
 ###Slave
 The **slave arduino** will handle the 4 QRD's as well as the pressure sensors. It takes these 6 analog inputs and outputs to 2 interrupt channels on the **master**. It also has 6 digital output pins to communicate values to the **master** \*cough cough\* and commander. Each is going to be an indicator for which sensors have tripped for the master. An interrupt will be sent to tell the **master** to read these inputs, otherwise they will be ignored.
-
-###Arduino Mini Pin Layout
+ -->
+<!-- ###Arduino Mini Pin Layout
 <table style="border: solid 1px black;">
   <tr>
     <th style="border: solid 1px black;">Pin Row 1</th>
@@ -135,7 +135,7 @@ The **slave arduino** will handle the 4 QRD's as well as the pressure sensors. I
     <td style="border: solid 1px black; background-color: rgb(217,137,255)">BACK PRESSURE BIN</td>
   </tr>
 
-</table>
+</table> -->
 
 ###Contributing
 If you would like to contribute download the git desktop software and check out this repo. Once you have checked out the master branch create a new branch. **PLEASE** follow the naming convention of `feature-[your username]` as your branch. This will allow me to track which user is creating which pull request to be merged into the master branch.

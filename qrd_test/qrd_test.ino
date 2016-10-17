@@ -61,7 +61,7 @@ void qrdCheck(){
       break;
 
     case 4:
-      Serial.println("| *  Back Left QRD has been tripped.             |   3   |");
+      Serial.println("| *  Back Left QRD has been tripped.             |   4   |");
       Serial.println("+------------------------------------------------+-------+");
       break;
 

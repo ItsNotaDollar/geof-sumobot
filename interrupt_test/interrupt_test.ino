@@ -6,8 +6,8 @@
 /*                                         Setting Up Pins                                          */
 /****************************************************************************************************/
 
-const unsigned int F_PRES_PIN           = 0;
-const unsigned int B_PRES_PIN           = 1;
+const unsigned int F_PRES_PIN = 0;
+const unsigned int B_PRES_PIN = 1;
 
 bool frontInterruptIsLow = true;
 bool  backInterruptIsLow = true;
@@ -23,7 +23,7 @@ void setup() {
   attachInterrupt(digitalPinToInterrupt(B_PRES_PIN),  backInterrupt, CHANGE);
 
   Serial.println("+------------------------------------------------+");
-  Serial.println("|                Interrupt Loggin                |");
+  Serial.println("|                Interrupt Logging               |");
   Serial.println("+------------------------------------------------+");
   Serial.println("");
   Serial.println("+------------------------------------------------+");
@@ -44,7 +44,7 @@ void frontInterrupt() {
 }
 
 void backInterrupt() {
-  Serial.println(" *  backInterrupt() is running!");
+  Serial.println("| *  backInterrupt() is running!                 |");
   if (backInterruptIsLow) {
     Serial.println("| *  Rising edge.                                |");
     backInterruptIsLow = false;
