@@ -60,15 +60,25 @@ const unsigned int CURRENT_SENSOR_PIN   = A6;
 const unsigned int F_PRES_PIN           = 0;
 const unsigned int B_PRES_PIN           = 1;
 
-const unsigned int LEFT_FRWD_ON_PIN     = 2;
-const unsigned int LEFT_FRWD_PWM_PIN    = 3;
-const unsigned int LEFT_REV_ON_PIN      = 4;
-const unsigned int LEFT_REV_PWM_PIN     = 5;
+// TODO: These have yet to be properly implemented in the motor controller
+const unsigned int Left_Forward_Pin     = 3;
+const unsigned int Left_Backward_Pin    = 5;
+const unsigned int Right_Backward_Pin   = 6;
+const unsigned int Right_Forward_Pin    = 9;
 
-const unsigned int RIGHT_REV_PWM_PIN    = 6;
-const unsigned int RIGHT_REV_ON_PIN     = 7;
-const unsigned int RIGHT_FRWD_ON_PIN    = 8;
-const unsigned int RIGHT_FRWD_PWM_PIN   = 9;
+
+// TODO: These need to be removed from the motor controller and updated witht he new values
+// @Deprecated
+// const unsigned int LEFT_FRWD_ON_PIN     = 2;
+// const unsigned int LEFT_FRWD_PWM_PIN    = 3;
+// const unsigned int LEFT_REV_ON_PIN      = 4;
+// const unsigned int LEFT_REV_PWM_PIN     = 5;
+
+// @Deprecated
+// const unsigned int RIGHT_REV_PWM_PIN    = 6;
+// const unsigned int RIGHT_REV_ON_PIN     = 7;
+// const unsigned int RIGHT_FRWD_ON_PIN    = 8;
+// const unsigned int RIGHT_FRWD_PWM_PIN   = 9;
 
 const unsigned int SONAR_RIGHT_TX       = 10; // Relative to arduino
 const unsigned int SONAR_RIGHT_RX       = 11; // Relative to arduino
