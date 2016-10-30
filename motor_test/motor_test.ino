@@ -14,10 +14,12 @@ void setup() {
 void loop() {
   delay(1000);
   analogWrite(Left_Backward_Pin, 0);
+  delay(5);
   analogWrite(Left_Forward_Pin, 255);
 
   delay(1000);
   analogWrite(Left_Forward_Pin, 0);
+  delay(5);`
   analogWrite(Left_Backward_Pin, 255);
 
 }

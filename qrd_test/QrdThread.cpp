@@ -17,9 +17,12 @@ void QrdThread::pinSetup(int f_LPinSetup, int f_RPinSetup, int b_LPinSetup, int 
 
 void QrdThread::run() {
   f_LBitValue = analogRead(f_LPin) < THRESHOLD ? 1 : 0;
-  f_RBitValue = analogRead(f_RPin) < THRESHOLD ? 2 : 0;
-  b_LBitValue = analogRead(b_LPin) < THRESHOLD ? 4 : 0;
-  b_RBitValue = analogRead(b_RPin) < THRESHOLD ? 8 : 0;
+  f_RBitValue = 0;
+  b_LBitValue = 0;
+  b_RBitValue = 0;
+  // f_RBitValue = analogRead(f_RPin) < THRESHOLD ? 2 : 0;
+  // b_LBitValue = analogRead(b_LPin) < THRESHOLD ? 4 : 0;
+  // b_RBitValue = analogRead(b_RPin) < THRESHOLD ? 8 : 0;
   qrdState = f_LBitValue + f_RBitValue + b_LBitValue + b_RBitValue;
   runned();
 };
