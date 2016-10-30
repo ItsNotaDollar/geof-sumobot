@@ -1,0 +1,1 @@
+// poll analog input polled in thread, set speed to 0 if past threshold
