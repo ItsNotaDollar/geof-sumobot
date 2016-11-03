@@ -46,6 +46,21 @@ void MotorController::timedStop(int time, bool isInterrupt) {
   }
 }
 
+
+void MotorController::setFastForward() {
+  analogWrite(_L_B_Pin, MOTOR_STOP);
+  analogWrite(_R_B_Pin, MOTOR_STOP);
+  analogWrite(_L_F_Pin, MOTOR_FULL);
+  analogWrite(_R_F_Pin, MOTOR_FULL);
+}
+
+void MotorController::setFastBackward() {
+  analogWrite(_L_F_Pin, MOTOR_STOP);
+  analogWrite(_R_F_Pin, MOTOR_STOP);
+  analogWrite(_L_B_Pin, MOTOR_FULL);
+  analogWrite(_R_B_Pin, MOTOR_FULL);
+}
+
 void MotorController::slowForward(int time) {
   analogWrite(_L_B_Pin   , MOTOR_STOP);
   analogWrite(_R_B_Pin   , MOTOR_STOP);

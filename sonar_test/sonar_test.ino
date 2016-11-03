@@ -1,39 +1,16 @@
-#include "Arduino.h"
-#define NOT_AN_INTERRUPT -1
+#include <"Ultrasonic.h">
 /****************************************************************************************************/
 /*                                         Setting Up Pins                                          */
 /****************************************************************************************************/
 
-const unsigned int F_PRES_PIN = 2;
+const unsigned int RIGHT_SONAR_TX       = 10;
+const unsigned int RIGHT_SONAR_RX       = 11;
+const unsigned int LEFT_SONAR_TX        = 12;
+const unsigned int LEFT_SONAR_RX        = 13;
 
-bool frontInterruptIsLow = true;
+Ultrasonic leftSonar(LEFT_SONAR_TX, LEFT_SONAR_RX);
+Ultrasonic rightSonar(RIGHT_SONAR_TX, RIGHT_SONAR_RX);
 
-void setup() {
-  Serial.begin(9600);
-
-  pinMode(F_PRES_PIN, INPUT);
-
-  // Setting up Pressure sensors on the interrupts
-  attachInterrupt(digitalPinToInterrupt(F_PRES_PIN), frontInterrupt, CHANGE);
-
-  Serial.println("+------------------------------------------------+");
-  Serial.println("|                Interrupt Logging               |");
-  Serial.println("+------------------------------------------------+");
-  Serial.println("");
-  Serial.println("+------------------------------------------------+");
-}
+void setup() {  }
 
 void loop() {  }
-
-void frontInterrupt() {
-  Serial.println("| *  frontInterrupt() is running!                |");
-  if (frontInterruptIsLow) {
-    Serial.println("| *  Rising edge.                                |");
-    frontInterruptIsLow = false;
-  } else {
-    Serial.println("| *  Falling edge.                               |");
-    frontInterruptIsLow = true;
-  }
-  Serial.println("+------------------------------------------------+");
-}
-

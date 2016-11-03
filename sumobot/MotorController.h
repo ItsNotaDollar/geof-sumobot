@@ -29,6 +29,9 @@ class MotorController {
     void fullStop(bool isInterrupt);
     void timedStop(int time, bool isInterrupt);
 
+    void setFastForward();
+    void setFastBackward();
+
     void slowForward(int time);
     void slowBackward(int time);
     void fastForward(int time);
