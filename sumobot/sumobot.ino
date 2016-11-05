@@ -1,11 +1,10 @@
 /*
- * Information:
- * This was written for the 2016 McMaster Sumobot Senior competition. All of the code was written by
+ * This was written for the 2016 McMaster Sumobot Advanced competition. All of the code was written by
  * McMaster students. For more information about the club check out sumobot.ca for more information.
  *
  * Author: Braden Corbold
  * Program: Mechatronics Engineering Level IV - McMaster University
- * Date: November 1st 2016
+ * Date: November 5th 2016
  *
  * Dependencies:
  * This project three dependencies which can be found at the links provided below. Follow normal 
@@ -16,18 +15,19 @@
  * TimerOne   -> http://playground.arduino.cc/Code/Timer1
  */
 
+#include <Arduino.h>
 #include <Ultrasonic.h>
 #include <Thread.h>
 #include <ThreadController.h>
 #include <TimerOne.h>
-// #include "sumobot.h"
 #include "MotorController.h"
+#include "sumobot.h"
 
 #define NOT_AN_INTERRUPT -1
 
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-/*                                         Setting Up Pins                                          */
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*                                          Setting Up Pins                                           */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 const unsigned int F_L_QRD_PIN          = A0;
 const unsigned int F_R_QRD_PIN          = A1;
 const unsigned int B_L_QRD_PIN          = A2;
@@ -51,15 +51,29 @@ const unsigned int RIGHT_SONAR_RX       = 11;
 const unsigned int LEFT_SONAR_TX        = 12;
 const unsigned int LEFT_SONAR_RX        = 13;
 
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
 const unsigned int QRD_THRESHOLD        = 100;
 const unsigned int CURRENT_THRESHOLD    = 13; // Calculated value when hitting 10A todo: this will need some calibration
+const unsigned int SONAR_THRESHOLD      = 130; // ring is 154 - 4 (white lines) - 20 opponent = 130
 
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+const unsigned int MOTOR_FULL = 255;
+const unsigned int MOTOR_HALF = 127;
+const unsigned int MOTOR_STOP = 0;
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
 Ultrasonic leftSonar(LEFT_SONAR_TX, LEFT_SONAR_RX);
 Ultrasonic rightSonar(RIGHT_SONAR_TX, RIGHT_SONAR_RX);
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
 MotorController motors = MotorController(Left_Forward_Pin, Left_Backward_Pin, Right_Backward_Pin, Right_Forward_Pin);
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
 Thread qrdThread = Thread();
 Thread currentMonitorThread = Thread();
 Thread frontPressureThread = Thread();
@@ -67,13 +81,13 @@ Thread backPressureThread = Thread();
 
 ThreadController controller = ThreadController();
 
-void runController(){
+void runController() {
   controller.run();
 }
 
 // callback for qrdThread
-void checkQrdValues(){
-  //todo: implement qrd logic here
+void checkQrdValues() {
+  //todo: the timing of these will need to be calibrated
   unsigned int f_l_val = analogRead(F_L_QRD_PIN) < QRD_THRESHOLD ? 1 : 0;
   unsigned int f_r_val = analogRead(F_R_QRD_PIN) < QRD_THRESHOLD ? 2 : 0;
   unsigned int b_l_val = analogRead(B_L_QRD_PIN) < QRD_THRESHOLD ? 4 : 0;
@@ -83,23 +97,35 @@ void checkQrdValues(){
 
   switch(qrdState) {
     // One Qrd Tripped
-    case 1: 
+    case 1: // front left
+      motors.slowBackward(300);
+      motors.fastRight(400);
       break;
-    case 2:
+    case 2: // front right 
+      motors.slowBackward(300);
+      motors.fastLeft(400);
       break;
-    case 4:
+    case 4: // back left
+      motors.slowForward(300);
+      motors.fastRight(400);
       break;
-    case 8:
+    case 8: // back right
+      motors.slowForward(300);
+      motors.fastLeft(400);
       break;
 
     // 2 Qrds Tripped
-    case 3:
+    case 3: // front QRDs
+      motors.fastBackward(500);
       break;
-    case 12:
+    case 12: // back QRDs
+      motors.fastForward(500);
       break;
-    case 5:
+    case 5: // left QRDs
+      motors.customMove(MOTOR_HALF, 0, MOTOR_FULL, 0, 300); //todo: will need lots of calibration
       break;
-    case 10:
+    case 10: // right QRDs
+      motors.customMove(MOTOR_FULL, 0, MOTOR_HALF, 0, 300); //todo: will need lots of calibration
       break;
 
     // 0 Qrds tripped (geometry of the ring excludes 3 or 4 Qrds being tripped as a possibility)
@@ -115,32 +141,50 @@ bool isQrdsTripped() {
             (analogRead(B_R_QRD_PIN) > QRD_THRESHOLD);
 }
 
-
-void checkCurrentUsage(){
+void checkCurrentUsage() {
   if (analogRead(CURRENT_SENSOR_PIN) >= CURRENT_THRESHOLD) {
-    motors.timedStop(10, true);
+    motors.timedStop(5, true);
     delay(10);
   }
 }
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-void frontInterrupt(){
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+void frontInterrupt() {
   if (digitalRead(F_PRES_PIN) == HIGH) {
     motors.setFastForward();
     while(digitalRead((F_PRES_PIN) == HIGH) && !isQrdsTripped()) {  } //todo: ram function?
     motors.fullStop(false);
   }
 }
-void backInterrupt(){
+void backInterrupt() {
   if (digitalRead(B_PRES_PIN) == HIGH) {
     motors.setFastBackward();
     while(digitalRead((B_PRES_PIN) == HIGH) && !isQrdsTripped()) {  } //todo: ram function?
     motors.fullStop(false);
   }
 }
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+Range valToRange(int val) {
+  if (val <= 5) {
+    return LESS_THAN_5;
+  } else if (val <= 20) {
+    return LESS_THAN_20;
+  } else if (val <= 50) {
+    return LESS_THAN_50;
+  } else if (val <= 100) {
+    return LESS_THAN_100;
+  } else {
+    return TOO_FAR;
+  }
+}
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*                                              setUp()                                               */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 void setup() {
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
   pinMode(F_L_QRD_PIN, INPUT);
   pinMode(F_R_QRD_PIN, INPUT);
   pinMode(B_L_QRD_PIN, INPUT);
@@ -163,7 +207,8 @@ void setup() {
   pinMode(LEFT_SONAR_RX, INPUT);
   pinMode(RIGHT_SONAR_TX, OUTPUT);
   pinMode(RIGHT_SONAR_RX, INPUT);
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+  
+
   qrdThread.onRun(checkQrdValues);
   qrdThread.setInterval(100); //Want to run this every 100ms
   
@@ -183,39 +228,54 @@ void setup() {
   
   Timer1.initialize(10000);//checks if threads need to be run every 10ms
   Timer1.attachInterrupt(runController); //todo: we may be able to Timer1.attachInterrupt(controller.run);
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 }
 
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*                                              loop()                                                */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 void loop() {
   // all the needs to be handled is sonar functions and movements
   int leftVal = leftSonar.Ranging(CM);
   int rightVal = rightSonar.Ranging(CM);
+
+  Range leftRange = valToRange(leftVal);
+  Range rightRange = valToRange(rightVal);
+
+  int diff = leftVal - rightVal;
+  //Note: +ve = closer to right, -ve = closer to left
+  if (diff < 0) {
+    // need to move left
+    switch(leftRange) {
+      case LESS_THAN_5:
+        motors.fastForward(1000);
+        break;
+      case LESS_THAN_20:
+      case LESS_THAN_50:
+        motors.fastLeft(300);
+        motors.fastForward(500);
+        break;
+      case LESS_THAN_100:
+      case TOO_FAR:
+        motors.slowLeft(500);
+        motors.slowForward(300);
+        break;
+    }
+  } else  {
+    // need to move right
+    switch(rightRange) {
+      case LESS_THAN_5:
+        motors.fastForward(1000);
+        break;
+      case LESS_THAN_20:
+      case LESS_THAN_50:
+        motors.fastRight(300);
+        motors.fastForward(500);
+        break;
+      case LESS_THAN_100:
+      case TOO_FAR:
+        motors.slowRight(300);
+        motors.slowForward(300);
+        break;
+    }
+  }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
