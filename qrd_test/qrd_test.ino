@@ -2,7 +2,7 @@
 #include <ThreadController.h>
 #include <TimerOne.h>
 
-const unsigned int qrdPin = A0;
+const unsigned int qrdPin = A1;
 
 const unsigned int QRD_CHECK_INTERVAL = 500; // tells the controller the thread should be run every 500ms
 const unsigned int TIMER_INTERVAL = 100000; // sets an interrupt for every 100 000us for the controller to check

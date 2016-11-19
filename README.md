@@ -7,8 +7,8 @@ Lets go Djeoph!!!
 
 Team members: 
 - **Braden** - [ItsNotaDollar](https://github.com/ItsNotaDollar)
-- **BoHan** - Nope...
-- **Jack** - Naaaa....
+- **BoHan**
+- **Jack**
 - **Patrick** - [pswitchskates](https://github.com/pswitchskates)
 
 ###Projects

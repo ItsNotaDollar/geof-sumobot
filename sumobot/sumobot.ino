@@ -76,8 +76,7 @@ MotorController motors = MotorController(Left_Forward_Pin, Left_Backward_Pin, Ri
 
 Thread qrdThread = Thread();
 Thread currentMonitorThread = Thread();
-Thread frontPressureThread = Thread();
-Thread backPressureThread = Thread();
+Thread pressureSensorThread = Thread();
 
 ThreadController controller = ThreadController();
 
@@ -215,15 +214,18 @@ void setup() {
   currentMonitorThread.onRun(checkCurrentUsage);
   currentMonitorThread.setInterval(20);
 
-  frontPressureThread.onRun(frontInterrupt);
-  frontPressureThread.setInterval(150);
+  pressureSensorThread
+.onRun(frontInterrupt);
+  pressureSensorThread
+.setInterval(150);
 
   backPressureThread.onRun(backInterrupt);
   backPressureThread.setInterval(150);
 
   controller.add(&qrdThread);
   controller.add(&currentMonitorThread);
-  controller.add(&frontPressureThread);
+  controller.add(&pressureSensorThread
+  );
   controller.add(&backPressureThread);
   
   Timer1.initialize(10000);//checks if threads need to be run every 10ms
