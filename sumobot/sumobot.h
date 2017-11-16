@@ -1,7 +1,0 @@
-enum Range {
-  LESS_THAN_5,
-  LESS_THAN_20,
-  LESS_THAN_50,
-  LESS_THAN_100,
-  TOO_FAR
-};

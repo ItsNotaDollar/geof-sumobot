@@ -1,6 +1,6 @@
-#**McMaster Sumobot - Team Eh**
+# **McMaster Sumobot - Team Eh**
 
-###Overview
+### Overview
 Welcome to the location of all of **Team Eh?**'s code for the [McMaster Sumobot](http://sumobot.ca/) Competition!!! This is the spot to download and contribute to our amazing robots!
 
 Lets go Djeoph!!!
@@ -11,5 +11,5 @@ Team members:
 - **Jack**
 - **Patrick** - [pswitchskates](https://github.com/pswitchskates)
 
-###Projects
+### Projects
 Each folder contains an Ardunio project file with appropriate external classes and headers where needed. Check out the ReadMe files for more information on the selected project.
